@@ -1,117 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101114">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>iPhone Camera | لوحة التحكم</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#101114;color:white;font-family:Arial,sans-serif}
-header{padding:22px;border-bottom:1px solid #333}
-.logo{font-size:23px;font-weight:bold}
-.logo span{color:#58baff}
-main{max-width:500px;margin:auto;padding:24px 16px}
-h1{font-size:27px}
+header{padding:22px;border-bottom:1px solid #303139;font-size:22px;font-weight:bold}
+header span{color:#58baff}
+main{max-width:520px;margin:auto;padding:22px 16px}
 p{color:#aaa;line-height:1.8;font-size:14px}
-.card{background:#202127;border:1px solid #373840;border-radius:18px;padding:18px;margin:15px 0}
-input{width:100%;padding:14px;margin:7px 0 14px;background:#101114;color:white;border:1px solid #444;border-radius:10px}
-button{width:100%;padding:14px;margin:6px 0;border:0;border-radius:11px;background:#58baff;color:#07121c;font-weight:bold;font-size:14px}
+.card{background:#202127;border:1px solid #373840;border-radius:18px;padding:18px;margin:16px 0}
+button{width:100%;padding:15px;margin-top:10px;border:0;border-radius:12px;background:#58baff;color:#07121c;font-weight:bold;font-size:14px}
 .secondary{background:#303139;color:white}
-.status{padding:14px;border-radius:12px;background:#191a20;color:#ffd479}
-.hidden{display:none}
-.note{font-size:12px;color:#999}
+input{width:100%;padding:13px;margin-top:10px;background:#101114;color:white;border:1px solid #444;border-radius:10px}
+.status{color:#8ed4ff}
 </style>
 </head>
 <body>
-<header><div class="logo">iPhone <span>Camera</span></div></header>
+<header>iPhone <span>Camera</span></header>
 <main>
-<h1>لوحة التحكم</h1>
-<p>سجّل الدخول بحسابك، ثم أنشئ جلسة اتصال جديدة.</p>
+<h2>لوحة التحكم</h2>
+<p>تجربة اتصال الكاميرا بين جهازين.</p>
 
-<div class="card" id="login">
-<h3>تسجيل الدخول</h3>
-<label>البريد الإلكتروني</label>
-<input id="email" type="email" autocomplete="username" placeholder="البريد الإلكتروني">
-<label>كلمة المرور</label>
-<input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
-<button id="loginBtn">تسجيل الدخول</button>
-<p id="message"></p>
-</div>
-
-<div class="card hidden" id="dashboard">
-<div class="status" id="status">تم تسجيل الدخول. الاتصال بالجهاز الآخر غير مفعّل بعد.</div>
-<h3>رابط الهاتف الآخر</h3>
-<input id="targetLink" readonly>
-<button id="copyBtn">نسخ رابط الهاتف الآخر</button>
-<button class="secondary" id="logoutBtn">تسجيل الخروج</button>
+<div class="card">
+<h3>حالة الاتصال</h3>
+<p class="status" id="status">لم يبدأ الاتصال بعد.</p>
+<p>رابط الهاتف الآخر:</p>
+<input id="link" readonly>
+<button id="copy">نسخ رابط الهاتف الآخر</button>
 </div>
 
 <div class="card">
-<h3>حالة المشروع</h3>
-<p>تسجيل الدخول متاح عبر Firebase. لم يتم تفعيل مشاركة الكاميرا أو الشاشة أو الملفات بعد.</p>
-<p class="note">لن تعمل مشاركة الكاميرا أو الشاشة إلا بعد موافقة واضحة من صاحب الهاتف. لا تشارك كلمة مرورك مع أي شخص.</p>
+<h3>الكاميرا</h3>
+<p>بعد إعداد الاتصال، يقدر صاحب الهاتف الآخر يوافق على مشاركة الكاميرا ويوقفها وقت ما يحب.</p>
+<button class="secondary" id="check">فحص جاهزية الصفحة</button>
 </div>
+
+<p>مشاركة الكاميرا عن بُعد غير مفعّلة في هذه النسخة.</p>
 </main>
+<script>
+document.getElementById('link').value =
+ new URL('./',location.href).href;
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
- getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-const firebaseConfig = {
- apiKey: "AIzaSyBrmNf9WVz7gLGKldR_gP3dAGXl9umkcUg",
- authDomain: "iphone-camera-9ada0.firebaseapp.com",
- databaseURL: "https://iphone-camera-9ada0-default-rtdb.firebaseio.com",
- projectId: "iphone-camera-9ada0",
- storageBucket: "iphone-camera-9ada0.firebasestorage.app",
- messagingSenderId: "567002924947",
- appId: "1:567002924947:web:c418b81e955b7a179f0a66"
+document.getElementById('copy').onclick=async()=>{
+ const field=document.getElementById('link');
+ try{
+  await navigator.clipboard.writeText(field.value);
+  alert('تم نسخ الرابط');
+ }catch(e){
+  field.select();
+  alert('انسخ الرابط يدويًا');
+ }
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const loginBox = document.getElementById("login");
-const dashboard = document.getElementById("dashboard");
-const message = document.getElementById("message");
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
- const email = document.getElementById("email").value.trim();
- const password = document.getElementById("password").value;
- message.textContent = "جاري تسجيل الدخول...";
- try {
-   await signInWithEmailAndPassword(auth, email, password);
-   message.textContent = "";
- } catch (error) {
-   message.textContent = "فشل تسجيل الدخول. راجع البريد وكلمة المرور.";
- }
-});
-
-onAuthStateChanged(auth, user => {
- loginBox.classList.toggle("hidden", !!user);
- dashboard.classList.toggle("hidden", !user);
- if (user) {
-   document.getElementById("targetLink").value =
-     new URL("./", location.href).href;
- }
-});
-
-document.getElementById("copyBtn").addEventListener("click", async () => {
- const field = document.getElementById("targetLink");
- try {
-   await navigator.clipboard.writeText(field.value);
-   alert("تم نسخ الرابط");
- } catch {
-   field.select();
-   alert("انسخ الرابط المحدد يدويًا");
- }
-});
-
-document.getElementById("logoutBtn").addEventListener("click", async () => {
- await signOut(auth);
-});
+document.getElementById('check').onclick=()=>{
+ document.getElementById('status').textContent=
+ 'الصفحة تعمل، لكن اتصال الكاميرا يحتاج إعداد WebRTC وFirebase.';
+};
 </script>
 </body>
 </html>
