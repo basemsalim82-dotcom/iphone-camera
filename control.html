@@ -1,103 +1,117 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101114">
 <title>iPhone Camera | لوحة التحكم</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#101114;color:#fff;font-family:Arial,sans-serif}
-header{padding:22px 18px;border-bottom:1px solid #292a30}
-.logo{font-size:22px;font-weight:bold}
+body{margin:0;background:#101114;color:white;font-family:Arial,sans-serif}
+header{padding:22px;border-bottom:1px solid #333}
+.logo{font-size:23px;font-weight:bold}
 .logo span{color:#58baff}
-main{max-width:650px;margin:auto;padding:22px 16px}
-h1{font-size:28px;margin-bottom:8px}
-.sub{color:#aaa;line-height:1.8;font-size:14px}
-.status{padding:15px;background:#1b1c22;border:1px solid #34353c;border-radius:16px;margin:22px 0}
-.dot{color:#ffcc66}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:#202127;border:1px solid #373840;border-radius:20px;padding:20px 14px}
-.symbol{font-size:30px;margin-bottom:12px}
-.card h3{font-size:16px;margin:0 0 8px}
-.card p{font-size:12px;color:#aaa;line-height:1.7;min-height:40px}
-button{width:100%;padding:13px 8px;border:0;border-radius:12px;background:#58baff;color:#07121c;font-weight:bold;font-size:13px}
-button:disabled{opacity:.55}
-.panel{margin-top:18px;padding:18px;background:#1b1c22;border-radius:18px}
-input{width:100%;padding:13px;border-radius:10px;border:1px solid #444;background:#101114;color:white;margin:10px 0}
-.note{font-size:12px;color:#aaa;line-height:1.9;margin-top:18px}
-a{color:#78c9ff}
-@media(max-width:360px){.grid{grid-template-columns:1fr}}
+main{max-width:500px;margin:auto;padding:24px 16px}
+h1{font-size:27px}
+p{color:#aaa;line-height:1.8;font-size:14px}
+.card{background:#202127;border:1px solid #373840;border-radius:18px;padding:18px;margin:15px 0}
+input{width:100%;padding:14px;margin:7px 0 14px;background:#101114;color:white;border:1px solid #444;border-radius:10px}
+button{width:100%;padding:14px;margin:6px 0;border:0;border-radius:11px;background:#58baff;color:#07121c;font-weight:bold;font-size:14px}
+.secondary{background:#303139;color:white}
+.status{padding:14px;border-radius:12px;background:#191a20;color:#ffd479}
+.hidden{display:none}
+.note{font-size:12px;color:#999}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">iPhone <span>Camera</span></div>
-</header>
+<header><div class="logo">iPhone <span>Camera</span></div></header>
 <main>
-  <h1>لوحة التحكم</h1>
-  <p class="sub">إدارة جلسة الاتصال مع الهاتف الآخر.</p>
+<h1>لوحة التحكم</h1>
+<p>سجّل الدخول بحسابك، ثم أنشئ جلسة اتصال جديدة.</p>
 
-  <div class="status">
-    <span class="dot">●</span>
-    <strong id="status">غير متصل</strong>
-    <p class="sub" id="details">لم يتم إنشاء اتصال بعد.</p>
-  </div>
+<div class="card" id="login">
+<h3>تسجيل الدخول</h3>
+<label>البريد الإلكتروني</label>
+<input id="email" type="email" autocomplete="username" placeholder="البريد الإلكتروني">
+<label>كلمة المرور</label>
+<input id="password" type="password" autocomplete="current-password" placeholder="كلمة المرور">
+<button id="loginBtn">تسجيل الدخول</button>
+<p id="message"></p>
+</div>
 
-  <div class="panel">
-    <strong>رابط الهاتف الآخر</strong>
-    <input id="targetLink" readonly>
-    <button onclick="copyLink()">نسخ رابط الهاتف الآخر</button>
-  </div>
+<div class="card hidden" id="dashboard">
+<div class="status" id="status">تم تسجيل الدخول. الاتصال بالجهاز الآخر غير مفعّل بعد.</div>
+<h3>رابط الهاتف الآخر</h3>
+<input id="targetLink" readonly>
+<button id="copyBtn">نسخ رابط الهاتف الآخر</button>
+<button class="secondary" id="logoutBtn">تسجيل الخروج</button>
+</div>
 
-  <div class="grid" style="margin-top:16px">
-    <div class="card">
-      <div class="symbol">📷</div>
-      <h3>الكاميرا</h3>
-      <p>طلب بدء مشاركة الكاميرا بموافقة صاحب الهاتف.</p>
-      <button onclick="notReady()">طلب فتح الكاميرا</button>
-    </div>
-    <div class="card">
-      <div class="symbol">📱</div>
-      <h3>بث الشاشة</h3>
-      <p>مشاركة الشاشة بعد موافقة صاحب الهاتف.</p>
-      <button onclick="notReady()">طلب بث الشاشة</button>
-    </div>
-    <div class="card">
-      <div class="symbol">📁</div>
-      <h3>نقل الملفات</h3>
-      <p>نقل ملفات يختارها صاحب الهاتف بنفسه.</p>
-      <button onclick="notReady()">فتح نقل الملفات</button>
-    </div>
-    <div class="card">
-      <div class="symbol">🔗</div>
-      <h3>الاتصال</h3>
-      <p>الربط الفعلي بين الهاتفين لم يُفعّل بعد.</p>
-      <button onclick="notReady()">فحص الاتصال</button>
-    </div>
-  </div>
-
-  <div class="note">
-    تنبيه: هذه واجهة أولية فقط. الأزرار لا تشغّل الكاميرا أو الشاشة ولا تنقل الملفات حاليًا. سنفعّلها بعد إعداد الاتصال الآمن، مع ظهور طلبات الموافقة على الهاتف الآخر.
-  </div>
+<div class="card">
+<h3>حالة المشروع</h3>
+<p>تسجيل الدخول متاح عبر Firebase. لم يتم تفعيل مشاركة الكاميرا أو الشاشة أو الملفات بعد.</p>
+<p class="note">لن تعمل مشاركة الكاميرا أو الشاشة إلا بعد موافقة واضحة من صاحب الهاتف. لا تشارك كلمة مرورك مع أي شخص.</p>
+</div>
 </main>
-<script>
-const targetLink = new URL('./', location.href).href;
-document.getElementById('targetLink').value = targetLink;
 
-async function copyLink(){
-  const field = document.getElementById('targetLink');
-  try{
-    await navigator.clipboard.writeText(field.value);
-    alert('تم نسخ الرابط');
-  }catch(e){
-    field.select();
-    alert('حدد الرابط وانسخه يدويًا');
-  }
-}
-function notReady(){
-  alert('الاتصال الفعلي لم يتم إعداده بعد. الخطوة التالية هي ربط الجهازين بخدمة اتصال.');
-}
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+ getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyBrmNf9WVz7gLGKldR_gP3dAGXl9umkcUg",
+ authDomain: "iphone-camera-9ada0.firebaseapp.com",
+ databaseURL: "https://iphone-camera-9ada0-default-rtdb.firebaseio.com",
+ projectId: "iphone-camera-9ada0",
+ storageBucket: "iphone-camera-9ada0.firebasestorage.app",
+ messagingSenderId: "567002924947",
+ appId: "1:567002924947:web:c418b81e955b7a179f0a66"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const loginBox = document.getElementById("login");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+ message.textContent = "جاري تسجيل الدخول...";
+ try {
+   await signInWithEmailAndPassword(auth, email, password);
+   message.textContent = "";
+ } catch (error) {
+   message.textContent = "فشل تسجيل الدخول. راجع البريد وكلمة المرور.";
+ }
+});
+
+onAuthStateChanged(auth, user => {
+ loginBox.classList.toggle("hidden", !!user);
+ dashboard.classList.toggle("hidden", !user);
+ if (user) {
+   document.getElementById("targetLink").value =
+     new URL("./", location.href).href;
+ }
+});
+
+document.getElementById("copyBtn").addEventListener("click", async () => {
+ const field = document.getElementById("targetLink");
+ try {
+   await navigator.clipboard.writeText(field.value);
+   alert("تم نسخ الرابط");
+ } catch {
+   field.select();
+   alert("انسخ الرابط المحدد يدويًا");
+ }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+ await signOut(auth);
+});
 </script>
 </body>
 </html>
