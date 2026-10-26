@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101114">
+<title>كاميرا آيفون</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101114;color:white;font-family:Arial,sans-serif}
+header{padding:22px 18px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:bold}
+.logo span{color:#55baff}
+.badge{background:#25262b;padding:8px 12px;border-radius:20px;font-size:12px;color:#ccc}
+main{padding:10px 16px 35px;max-width:520px;margin:auto}
+h1{font-size:30px;margin:15px 0 8px}
+.sub{color:#a5a6ad;font-size:14px;line-height:1.8}
+.preview{height:390px;background:linear-gradient(145deg,#30333b,#17181c 55%,#252a33);border:1px solid #41434a;border-radius:30px;margin:24px 0 18px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.preview:before{content:"";position:absolute;width:240px;height:240px;border:1px solid #ffffff16;border-radius:50%}
+.preview:after{content:"";position:absolute;width:170px;height:170px;border:1px solid #ffffff18;border-radius:50%}
+.camera{font-size:75px;opacity:.9}
+.live{position:absolute;top:16px;right:16px;background:#ffffff16;padding:8px 12px;border-radius:18px;font-size:12px}
+.bottom{position:absolute;bottom:18px;display:flex;gap:10px}
+.bottom span{background:#ffffff18;padding:9px 12px;border-radius:20px;font-size:12px}
+h3{font-size:17px;margin:24px 0 14px}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.filter{background:#222329;border:1px solid #36373d;border-radius:16px;padding:15px 4px;text-align:center;color:#ddd;font-size:12px;cursor:pointer}
+.filter b{display:block;font-size:25px;margin-bottom:9px}
+.filter.active{border-color:#55baff;background:#172a3a;color:#8ed4ff}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+button{border:0;border-radius:16px;padding:16px 8px;font-size:14px;font-weight:bold;cursor:pointer}
+.primary{background:#58baff;color:#08121b}
+.secondary{background:#292a30;color:white;border:1px solid #42434a}
+.note{margin-top:20px;padding:14px;background:#1c1d22;border-radius:15px;color:#aaa;font-size:12px;line-height:1.8}
+footer{text-align:center;color:#686a72;font-size:12px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">iPhone <span>Camera</span></div>
+  <div class="badge">PHOTO STUDIO</div>
+</header>
+<main>
+  <h1>خلّي صورك مختلفة ✨</h1>
+  <p class="sub">اختار الفلتر اللي يناسبك واستمتع بتجربة تصوير بتصميم أنيق.</p>
+
+  <div class="preview" id="preview">
+    <div class="live">● PHOTO MODE</div>
+    <div class="camera" id="camera">📷</div>
+    <div class="bottom"><span>4K QUALITY</span><span>PORTRAIT</span></div>
+  </div>
+
+  <h3>اختار ستايلك</h3>
+  <div class="filters">
+    <div class="filter active" onclick="choose(this,'none')"><b>◉</b>طبيعي</div>
+    <div class="filter" onclick="choose(this,'warm')"><b>🌅</b>دافئ</div>
+    <div class="filter" onclick="choose(this,'cool')"><b>❄️</b>بارد</div>
+    <div class="filter" onclick="choose(this,'bw')"><b>◐</b>أبيض وأسود</div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" onclick="document.getElementById('photo').click()">اختار صورة من جهازك</button>
+    <button class="secondary" onclick="resetStyle()">إعادة ضبط الفلتر</button>
+  </div>
+  <input id="photo" type="file" accept="image/*" hidden onchange="showPhoto(event)">
+
+  <div class="note">دي واجهة تجريبية لتصميم برنامج فلاتر صور فقط. لا تشغّل الكاميرا ولا تتصل بأي جهاز آخر.</div>
+</main>
+<footer>Designed with care · iPhone Camera</footer>
+<script>
+let current='none';
+function choose(el,filter){
+ document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+ el.classList.add('active');
+ current=filter;
+ applyFilter();
+}
+function applyFilter(){
+ const p=document.getElementById('preview');
+ if(!p.querySelector('img'))return;
+ const img=p.querySelector('img');
+ img.style.filter=current==='warm'?'sepia(.35) saturate(1.25)':current==='cool'?'saturate(.8) hue-rotate(15deg)':current==='bw'?'grayscale(1)':'none';
+}
+function showPhoto(e){
+ const file=e.target.files[0];
+ if(!file)return;
+ const url=URL.createObjectURL(file);
+ const p=document.getElementById('preview');
+ p.querySelectorAll('img').forEach(x=>x.remove());
+ document.getElementById('camera').style.display='none';
+ const img=document.createElement('img');
+ img.src=url;
+ img.style.cssText='width:100%;height:100%;object-fit:contain;position:absolute;inset:0;background:#101114';
+ p.appendChild(img);
+ applyFilter();
+}
+function resetStyle(){
+ current='none';
+ document.querySelectorAll('.filter').forEach((x,i)=>x.classList.toggle('active',i===0));
+ applyFilter();
+}
+</script>
+</body>
+</html>
