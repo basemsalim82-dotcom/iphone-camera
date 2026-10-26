@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101114">
+<title>iPhone Camera | لوحة التحكم</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101114;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px 18px;border-bottom:1px solid #292a30}
+.logo{font-size:22px;font-weight:bold}
+.logo span{color:#58baff}
+main{max-width:650px;margin:auto;padding:22px 16px}
+h1{font-size:28px;margin-bottom:8px}
+.sub{color:#aaa;line-height:1.8;font-size:14px}
+.status{padding:15px;background:#1b1c22;border:1px solid #34353c;border-radius:16px;margin:22px 0}
+.dot{color:#ffcc66}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#202127;border:1px solid #373840;border-radius:20px;padding:20px 14px}
+.symbol{font-size:30px;margin-bottom:12px}
+.card h3{font-size:16px;margin:0 0 8px}
+.card p{font-size:12px;color:#aaa;line-height:1.7;min-height:40px}
+button{width:100%;padding:13px 8px;border:0;border-radius:12px;background:#58baff;color:#07121c;font-weight:bold;font-size:13px}
+button:disabled{opacity:.55}
+.panel{margin-top:18px;padding:18px;background:#1b1c22;border-radius:18px}
+input{width:100%;padding:13px;border-radius:10px;border:1px solid #444;background:#101114;color:white;margin:10px 0}
+.note{font-size:12px;color:#aaa;line-height:1.9;margin-top:18px}
+a{color:#78c9ff}
+@media(max-width:360px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">iPhone <span>Camera</span></div>
+</header>
+<main>
+  <h1>لوحة التحكم</h1>
+  <p class="sub">إدارة جلسة الاتصال مع الهاتف الآخر.</p>
+
+  <div class="status">
+    <span class="dot">●</span>
+    <strong id="status">غير متصل</strong>
+    <p class="sub" id="details">لم يتم إنشاء اتصال بعد.</p>
+  </div>
+
+  <div class="panel">
+    <strong>رابط الهاتف الآخر</strong>
+    <input id="targetLink" readonly>
+    <button onclick="copyLink()">نسخ رابط الهاتف الآخر</button>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <div class="symbol">📷</div>
+      <h3>الكاميرا</h3>
+      <p>طلب بدء مشاركة الكاميرا بموافقة صاحب الهاتف.</p>
+      <button onclick="notReady()">طلب فتح الكاميرا</button>
+    </div>
+    <div class="card">
+      <div class="symbol">📱</div>
+      <h3>بث الشاشة</h3>
+      <p>مشاركة الشاشة بعد موافقة صاحب الهاتف.</p>
+      <button onclick="notReady()">طلب بث الشاشة</button>
+    </div>
+    <div class="card">
+      <div class="symbol">📁</div>
+      <h3>نقل الملفات</h3>
+      <p>نقل ملفات يختارها صاحب الهاتف بنفسه.</p>
+      <button onclick="notReady()">فتح نقل الملفات</button>
+    </div>
+    <div class="card">
+      <div class="symbol">🔗</div>
+      <h3>الاتصال</h3>
+      <p>الربط الفعلي بين الهاتفين لم يُفعّل بعد.</p>
+      <button onclick="notReady()">فحص الاتصال</button>
+    </div>
+  </div>
+
+  <div class="note">
+    تنبيه: هذه واجهة أولية فقط. الأزرار لا تشغّل الكاميرا أو الشاشة ولا تنقل الملفات حاليًا. سنفعّلها بعد إعداد الاتصال الآمن، مع ظهور طلبات الموافقة على الهاتف الآخر.
+  </div>
+</main>
+<script>
+const targetLink = new URL('./', location.href).href;
+document.getElementById('targetLink').value = targetLink;
+
+async function copyLink(){
+  const field = document.getElementById('targetLink');
+  try{
+    await navigator.clipboard.writeText(field.value);
+    alert('تم نسخ الرابط');
+  }catch(e){
+    field.select();
+    alert('حدد الرابط وانسخه يدويًا');
+  }
+}
+function notReady(){
+  alert('الاتصال الفعلي لم يتم إعداده بعد. الخطوة التالية هي ربط الجهازين بخدمة اتصال.');
+}
+</script>
+</body>
+</html>
